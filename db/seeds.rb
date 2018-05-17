@@ -1,7 +1,7 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
+# require 'net/http'
+# require 'uri'
+# p "Fetching publications from arxiv.org..."
+# url = URI.parse('http://export.arxiv.org/api/query?search_query=all:electron&start=0&max_results=1')
+# res = Net::HTTP.get_response(url)
 #
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+# p res.body

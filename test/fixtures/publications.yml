@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  abstract: MyText
+  pdf: MyString
+  arxiv_url: MyString
+
+two:
+  title: MyString
+  abstract: MyText
+  pdf: MyString
+  arxiv_url: MyString
