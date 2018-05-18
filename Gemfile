@@ -49,3 +49,5 @@ gem 'dotenv-rails'
 
 # Oauth
 gem 'omniauth-google-oauth2'
+
+gem "full-name-splitter"
