@@ -91,7 +91,8 @@ years.each do |year|
   months.each do |month|
     days.each do |day|
       # Skip until day of first results
-      next if year == 2007 && month < 05 && day < 23
+      next if year == 2007 && month < 5
+      next if year == 2007 && month == 5 && day < 23
       begin
         from = Date.new(year, month, day).iso8601
       rescue ArgumentError
