@@ -51,3 +51,7 @@ gem 'dotenv-rails'
 gem 'omniauth-google-oauth2'
 
 gem "full-name-splitter"
+
+gem 'active_model_serializers', '~> 0.10.0'
+
+gem 'kaminari'
