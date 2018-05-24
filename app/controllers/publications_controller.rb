@@ -3,7 +3,10 @@ class PublicationsController < ApplicationController
 
   # GET /publications
   def index
-    @publications = Publication.order('title').page params[:page]
+    @publications = Publication.order('title').page(params[:page])
+    unless params[:search].nil?
+      @publications = @publications.where('LOWER(title) LIKE LOWER(:search) OR LOWER(abstract) LIKE LOWER(:search)', search: "%#{params[:search]}%")
+    end
     render json: @publications
   end
 
@@ -19,6 +22,6 @@ class PublicationsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def publication_params
-      params.fetch(:publication, {})
+      params.fetch(:publication).permit(:search)
     end
 end
