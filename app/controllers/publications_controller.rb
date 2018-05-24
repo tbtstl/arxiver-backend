@@ -3,11 +3,20 @@ class PublicationsController < ApplicationController
 
   # GET /publications
   def index
-    @publications = Publication.order('title').page(params[:page])
+    @publications = Publication.joins(:subjects, :authors)
     unless params[:search].nil?
-      @publications = @publications.where('LOWER(title) LIKE LOWER(:search) OR LOWER(abstract) LIKE LOWER(:search)', search: "%#{params[:search]}%")
+      search = "%#{params[:search]}%"
+      @publications = @publications.where('LOWER(title) LIKE LOWER(:search) OR LOWER(abstract) LIKE LOWER(:search)', search: search)
+
+      if params[:exclude_authors].nil? or params[:exclude_authors] == "false"
+        @publications = @publications.or(Publication.joins(:subjects, :authors).where('LOWER(authors.name) LIKE LOWER(:search)', search: search))
+      end
+
+      if params[:exclude_subjects].nil? or params[:exclude_subjects] == "false"
+        @publications = @publications.or(Publication.joins(:subjects, :authors).where('LOWER(subjects.key) LIKE LOWER(:search) OR LOWER(subjects.name) LIKE LOWER(:search)', search: search))
+      end
     end
-    render json: @publications
+    render json: @publications.page(params[:page]).order('title').distinct
   end
 
   # GET /publications/1
@@ -22,6 +31,6 @@ class PublicationsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def publication_params
-      params.fetch(:publication).permit(:search)
+      params.fetch(:publication).permit(:search, :exclude_authors, :exclude_subjects)
     end
 end
