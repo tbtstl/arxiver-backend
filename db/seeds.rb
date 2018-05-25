@@ -87,12 +87,18 @@ years = (2007..2018).to_a
 months = (1..12).to_a
 days = (1..31).step(step).to_a
 
+seed_since_year = ENV["SEED_SINCE_YEAR"] ? ENV["SEED_SINCE_YEAR"].to_i : 2007
+seed_since_month = ENV["SEED_SINCE_MONTH"] ? ENV["SEED_SINCE_MONTH"].to_i : 1
+seed_since_day = ENV["SEED_SINCE_DAY"] ? ENV["SEED_SINCE_DAY"].to_i : 1
+
+
 years.each do |year|
   months.each do |month|
     days.each do |day|
       # Skip until day of first results
-      next if year == 2007 && month < 5
-      next if year == 2007 && month == 5 && day < 23
+      next if year < seed_since_year
+      next if year <= seed_since_year && month < seed_since_month
+      next if year == seed_since_year && month == seed_since_month && day < seed_since_day
       begin
         from = Date.new(year, month, day).iso8601
       rescue ArgumentError
