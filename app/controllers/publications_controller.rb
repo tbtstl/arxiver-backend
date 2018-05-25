@@ -3,31 +3,27 @@ class PublicationsController < ApplicationController
 
   # GET /publications
   def index
-    @publications = Publication.joins(:subjects, :authors)
+    @publications = Publication.joins(:authors, :subjects)
+
     unless params[:search].nil?
-      search = "%#{params[:search]}%"
-      @publications = @publications.where('LOWER(title) LIKE LOWER(:search) OR LOWER(abstract) LIKE LOWER(:search)', search: search)
-
-      if params[:exclude_authors].nil? or params[:exclude_authors] == "false"
-        @publications = @publications.or(Publication.joins(:subjects, :authors).where('LOWER(authors.name) LIKE LOWER(:search)', search: search))
-      end
-
-      if params[:exclude_subjects].nil? or params[:exclude_subjects] == "false"
-        @publications = @publications.or(Publication.joins(:subjects, :authors).where('LOWER(subjects.key) LIKE LOWER(:search) OR LOWER(subjects.name) LIKE LOWER(:search)', search: search))
-      end
+      @author_ids = Author.get_ids_from_name params[:search]
+      @subject_ids = Subject.get_ids_from_search params[:search]
+      @publications = @publications.search params[:search]
+      @publications = @publications.or(Publication.joins(:authors, :subjects).where(subjects: {:id => @subject_ids}))
+      @publications = @publications.or(Publication.joins(:authors, :subjects).where(authors: {:id => @author_ids}))
     end
 
     unless params[:author].nil?
-      search = "%#{params[:author]}%"
-      @publications = @publications.where('LOWER(authors.name) LIKE LOWER(:search)', search: search)
+      @author_ids = Author.get_ids_from_name params[:author]
+      @publications = @publications.where(authors: {id: @author_ids})
     end
 
     unless params[:subject].nil?
-      # search = "#{params[:subject]}"
-      @publications = @publications.where('LOWER(subjects.key) = LOWER(:search)', search: params[:subject])
+      @subject_ids = Subject.get_ids_from_search params[:subject]
+      @publications = @publications.where(subjects: {id: @subject_ids})
     end
-
-    render json: @publications.page(params[:page]).order('title').distinct
+    render json: @publications.page(params[:page]).distinct
+    # render json: @publications.page(params[:page]).order('title').distinct
   end
 
   # GET /publications/1
