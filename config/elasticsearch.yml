@@ -1,0 +1,17 @@
+development:
+  host: 'http://localhost:9200'
+  transport_options:
+    request:
+      timeout: 15
+
+test:
+  host: 'http://localhost:9200'
+  transport_options:
+    request:
+      timeout: 15
+
+production:
+  host: <%= ENV['ELASTICSEARCH_URL'] %>
+  transport_options:
+    request:
+      timeout: 15
