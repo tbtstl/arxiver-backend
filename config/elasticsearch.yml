@@ -11,7 +11,7 @@ test:
       timeout: 15
 
 production:
-  host: <%= ENV['ELASTICSEARCH_URL'] %>
+  url: <%= ENV['ELASTICSEARCH_URL'] %>
   transport_options:
     request:
       timeout: 15
